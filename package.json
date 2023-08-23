@@ -29,5 +29,9 @@
     "express": "^4.18.2",
     "nodemailer": "^6.9.3",
     "prisma": "^4.16.1"
+  },
+  "prisma": {
+    "schema": "src/prisma/schema.prisma",
+    "seed": "ts-node src/prisma/seed.ts"
   }
 }

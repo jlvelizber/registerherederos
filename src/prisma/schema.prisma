@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  user
+  admin
+}
+
+model User {
+  id         Int        @id @default(autoincrement())
+  name       String     @db.VarChar(60)
+  lastname   String     @db.VarChar(60)
+  password   String
+  email      String     @unique @db.VarChar(60)
+  role       Role       @default(user)
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now())
+  deleted_at DateTime?
+  Register   Register[]
+}
+
+model Kid {
+  id              Int        @id @default(autoincrement())
+  identification  String     @unique
+  name            String     @db.VarChar(60)
+  lastname        String     @db.VarChar(60)
+  email           String?    @db.VarChar(120)
+  parent_name     String     @db.VarChar(60)
+  parent_lastname String     @db.VarChar(60)
+  parent_email    String?    @db.VarChar(120)
+  parent_phone    String     @db.VarChar(10)
+  created_at      DateTime   @default(now())
+  updated_at      DateTime   @default(now())
+  deleted_at      DateTime?
+  Register        Register[]
+}
+
+model Campus {
+  id             Int              @id @default(autoincrement())
+  name           String           @db.VarChar(60)
+  code_name      String           @db.VarChar(30)
+  address        String
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @default(now())
+  deleted_at     DateTime?
+  CampusServices CampusServices[]
+}
+
+model CampusServices {
+  id          Int        @id @default(autoincrement())
+  Campus      Campus     @relation(fields: [campus_id], references: [id])
+  campus_id   Int
+  description String
+  start_hour  Int
+  end_hour    Int
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @default(now())
+  deleted_at  DateTime?
+  Register    Register[]
+}
+
+model Register {
+  id               Int            @id @default(autoincrement())
+  User             User           @relation(fields: [register_user_id], references: [id])
+  register_user_id Int
+  kid              Kid            @relation(fields: [kid_id], references: [id])
+  kid_id           Int
+  Service          CampusServices @relation(fields: [service_id], references: [id])
+  service_id       Int
+  created_at       DateTime       @default(now())
+  updated_at       DateTime       @default(now())
+  deleted_at       DateTime?
+}
