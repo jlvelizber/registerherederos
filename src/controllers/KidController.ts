@@ -4,10 +4,13 @@ import KidModel from "../models/Kid.model";
 
 import {
   RESPONSES_TYPES,
+  getErrorsByKeyForm,
   modelDeletedSuccessfully,
   modelNotFound,
   modelSaveError,
 } from "../utils";
+import { KidRequestSchema } from "../validations";
+import { ValidationError } from "yup";
 
 class KidController implements RootControllerInterface {
   /**
@@ -43,14 +46,27 @@ class KidController implements RootControllerInterface {
    */
   async save(req: Request, res: Response) {
     const { body } = req;
-    const user = await KidModel.save(body);
-    if (user) {
-      return res.status(RESPONSES_TYPES.CREATED).json(user);
-    }
 
-    return res
-      .status(RESPONSES_TYPES.INTERNAL_SERVER_ERROR)
-      .json(modelSaveError);
+    try {
+      // valida
+      await KidRequestSchema.validate(body, { abortEarly: false });
+
+      const user = await KidModel.save(body);
+      if (user) {
+        return res.status(RESPONSES_TYPES.CREATED).json(user);
+      }
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        // Extrae y formatea los errores que vienen desde yup
+        const responseError = getErrorsByKeyForm(error);
+
+        return res
+          .status(RESPONSES_TYPES.BAD_REQUEST)
+          .json({ data: responseError });
+      }
+
+      return res.status(RESPONSES_TYPES.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
 
   async update(req: Request, res: Response) {
@@ -90,5 +106,4 @@ class KidController implements RootControllerInterface {
   }
 }
 
-
-export default new KidController()
+export default new KidController();

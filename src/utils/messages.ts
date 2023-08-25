@@ -14,3 +14,5 @@ export const modelDeletedSuccessfully : MessageResponse = {
     ok : true,
     message : 'Model Deleted Successfully'
 }
+
+export const invalidIdentification = "invalid identification";

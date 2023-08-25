@@ -13,6 +13,7 @@ app.use(express.json());
 // ROUTES
 app.use("/api/v2", routes);
 
+
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response) => {
   // console.error(err);
