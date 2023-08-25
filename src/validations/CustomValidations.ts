@@ -12,6 +12,7 @@ declare module "yup" {
  * Todas las validaciones custom
  */
 export function CustomValidations() {
+  // Valida identifcacion
   Yup.addMethod<Yup.StringSchema>(
     Yup.string,
     "verifyIdentification",
@@ -23,9 +24,15 @@ export function CustomValidations() {
           const { path, createError } = this;
 
           const isValid = ValidateIdentification(valueParam as string);
+          
           if (!isValid) createError({ path, message });
+          return isValid;
         }
       );
     }
   );
+
+
+
+
 }

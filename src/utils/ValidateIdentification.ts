@@ -31,6 +31,6 @@ export const ValidateIdentification = (identification: string) => {
   } else {
     identificationCorrecta = false;
   }
-
+  
   return identificationCorrecta
 };

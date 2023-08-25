@@ -4,10 +4,13 @@ import CampusModel from "../models/Campus.model";
 
 import {
   RESPONSES_TYPES,
+  getErrorsByKeyForm,
   modelDeletedSuccessfully,
   modelNotFound,
   modelSaveError,
 } from "../utils";
+import { CampusRequest } from "../validations";
+import { ValidationError } from "yup";
 
 class CampusController implements RootControllerInterface {
   /**
@@ -43,28 +46,68 @@ class CampusController implements RootControllerInterface {
    */
   async save(req: Request, res: Response) {
     const { body } = req;
-    const user = await CampusModel.save(body);
-    if (user) {
-      return res.status(RESPONSES_TYPES.CREATED).json(user);
-    }
 
-    return res
-      .status(RESPONSES_TYPES.INTERNAL_SERVER_ERROR)
-      .json(modelSaveError);
+    try {
+      await CampusRequest.validate(body, { abortEarly: false });
+
+      const user = await CampusModel.save(body);
+      if (user) {
+        return res.status(RESPONSES_TYPES.CREATED).json(user);
+      }
+
+      return res
+        .status(RESPONSES_TYPES.INTERNAL_SERVER_ERROR)
+        .json(modelSaveError);
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        // Extrae y formatea los errores que vienen desde yup
+        const responseError = getErrorsByKeyForm(error);
+
+        return res
+          .status(RESPONSES_TYPES.BAD_REQUEST)
+          .json({ data: responseError });
+      }
+
+      return res.status(RESPONSES_TYPES.INTERNAL_SERVER_ERROR).json({ error });
+    }
   }
+
+  /**
+   * Update the model
+   * @param req U
+   * @param res
+   * @returns
+   */
 
   async update(req: Request, res: Response) {
     const { body } = req;
     const { id } = req.params;
 
-    const user = await CampusModel.find(parseInt(id) as number);
-    if (!user) {
-      return res.status(RESPONSES_TYPES.MODEL_NOT_FOUND).json(modelNotFound);
-    }
+    try {
+      await CampusRequest.validate(body, { abortEarly: false });
+      const user = await CampusModel.find(parseInt(id) as number);
+      if (!user) {
+        return res.status(RESPONSES_TYPES.MODEL_NOT_FOUND).json(modelNotFound);
+      }
 
-    const userUpdated = await CampusModel.update(parseInt(id) as number, body);
-    if (userUpdated) {
-      return res.status(RESPONSES_TYPES.CREATED).json(userUpdated);
+      const userUpdated = await CampusModel.update(
+        parseInt(id) as number,
+        body
+      );
+      if (userUpdated) {
+        return res.status(RESPONSES_TYPES.CREATED).json(userUpdated);
+      }
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        // Extrae y formatea los errores que vienen desde yup
+        const responseError = getErrorsByKeyForm(error);
+
+        return res
+          .status(RESPONSES_TYPES.BAD_REQUEST)
+          .json({ data: responseError });
+      }
+
+      return res.status(RESPONSES_TYPES.INTERNAL_SERVER_ERROR).json({ error });
     }
   }
 
@@ -90,5 +133,4 @@ class CampusController implements RootControllerInterface {
   }
 }
 
-
-export default new CampusController()
+export default new CampusController();

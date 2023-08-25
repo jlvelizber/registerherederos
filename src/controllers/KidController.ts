@@ -73,14 +73,29 @@ class KidController implements RootControllerInterface {
     const { body } = req;
     const { id } = req.params;
 
-    const user = await KidModel.find(parseInt(id) as number);
-    if (!user) {
-      return res.status(RESPONSES_TYPES.MODEL_NOT_FOUND).json(modelNotFound);
-    }
+    try {
+      // validamos si existe el modelo
+      const user = await KidModel.find(parseInt(id) as number);
+      if (!user) {
+        return res.status(RESPONSES_TYPES.MODEL_NOT_FOUND).json(modelNotFound);
+      }
 
-    const userUpdated = await KidModel.update(parseInt(id) as number, body);
-    if (userUpdated) {
-      return res.status(RESPONSES_TYPES.CREATED).json(userUpdated);
+      // valida
+      await KidRequestSchema.validate(body, { abortEarly: false });
+
+      const userUpdated = await KidModel.update(parseInt(id) as number, body);
+      if (userUpdated) {
+        return res.status(RESPONSES_TYPES.CREATED).json(userUpdated);
+      }
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        // Extrae y formatea los errores que vienen desde yup
+        const responseError = getErrorsByKeyForm(error);
+
+        return res
+          .status(RESPONSES_TYPES.BAD_REQUEST)
+          .json({ data: responseError });
+      }
     }
   }
 
