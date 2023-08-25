@@ -1,0 +1,5 @@
+export * from './Campus.model'
+export * from './CampusServices.model'
+export * from './Kid.model'
+export * from './Register.model'
+export * from './User.model'

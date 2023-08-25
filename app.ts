@@ -9,6 +9,8 @@ app.use(express.static("public"));
 // Middleware
 app.use(express.json());
 
+
+// ROUTES
 app.use("/api/v2", routes);
 
 // Error handling middleware
