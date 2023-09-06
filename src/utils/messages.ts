@@ -18,3 +18,5 @@ export const modelDeletedSuccessfully : MessageResponse = {
 export const invalidIdentification = "invalid identification";
 
 export const existIdentification = "identification now exists";
+
+export const existEmail = "Email now exists";

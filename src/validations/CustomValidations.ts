@@ -1,11 +1,13 @@
 import * as Yup from "yup";
 import {
   ValidateIdentification,
+  existEmail,
   existIdentification,
   invalidIdentification,
 } from "../utils";
 import { PrismaClient } from "@prisma/client";
 import KidModel from "../models/Kid.model";
+import UserModel from "../models/User.model";
 
 const prisma = new PrismaClient();
 
@@ -14,6 +16,7 @@ declare module "yup" {
   interface StringSchema {
     verifyIdentification(customMessage?: string): this;
     uniqueKidIdentification(customMessage?: string): this;
+    uniqueUserEmail(customMessage?: string): this;
   }
   interface MixedSchema {
     uniqueKidIdentification(customMessage?: string): this;
@@ -43,7 +46,7 @@ export function CustomValidations() {
       );
     }
   );
-
+  // Valida la identificacion de un nino en Kids
   Yup.addMethod<Yup.StringSchema>(
     Yup.string,
     "uniqueKidIdentification",
@@ -52,6 +55,11 @@ export function CustomValidations() {
         "uniqueKidIdentification",
         message || existIdentification,
         async function (valueParam) {
+
+
+          if(!valueParam) return true;
+
+          
           const { path, createError, parent } = this;
 
           const idKid = parent.id;
@@ -67,6 +75,50 @@ export function CustomValidations() {
           } else {
             // or save
              exist = await KidModel.validateIfKidExistForIdentification(
+              valueParam as string
+            );
+          }
+
+          if (exist) return createError({ path, message });
+
+          return true;
+        }
+      );
+    }
+  );
+
+
+
+
+   // Valida la identificacion de un nino en Kids
+   Yup.addMethod<Yup.StringSchema>(
+    Yup.string,
+    "uniqueUserEmail",
+    function (message) {
+      return this.test(
+        "uniqueUserEmail",
+        message || existEmail,
+        async function (valueParam) {
+
+
+          if(!valueParam) return true;
+          
+          
+          const { path, createError, parent } = this;
+
+          const idKid = parent.id;
+
+          let exist = false;
+
+          // On update
+          if (idKid) {
+             exist = await UserModel.validateIfUserExistForEmail(
+              valueParam as string,
+              parseInt(idKid) as number
+            );
+          } else {
+            // or save
+             exist = await UserModel.validateIfUserExistForEmail(
               valueParam as string
             );
           }

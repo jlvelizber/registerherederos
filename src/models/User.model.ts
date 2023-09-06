@@ -11,7 +11,7 @@ class User implements RootModelInterface {
     role: true,
     created_at: true,
     updated_at: true,
-    password:false,
+    password: false,
     deleted_at: false,
   };
 
@@ -21,13 +21,13 @@ class User implements RootModelInterface {
    */
   async listAll(): Promise<any[]> {
     const users = await prisma.user.findMany({
-        where: {
-          deleted_at: null,
-        },
-        select: this.visibleColumns,
-      });
-  
-      return users;
+      where: {
+        deleted_at: null,
+      },
+      select: this.visibleColumns,
+    });
+
+    return users;
   }
 
   /**
@@ -50,6 +50,7 @@ class User implements RootModelInterface {
   async save(body: any): Promise<any> {
     return await prisma.user.create({
       data: body,
+      select: this.visibleColumns,
     });
   }
 
@@ -76,7 +77,28 @@ class User implements RootModelInterface {
       data: { deleted_at: new Date() },
     });
   }
-}
 
+  /**
+   * Validate if an user exist by its email
+   */
+
+  async validateIfUserExistForEmail(
+    email: string,
+    idUser?: number
+  ): Promise<boolean> {
+    const user = await prisma.user.findFirst({
+      where: {
+        email: email,
+        id: {
+          not: idUser,
+        },
+      },
+      select: { email: true },
+    });
+
+    if (user && user.email) return true;
+    return false;
+  }
+}
 
 export default new User();
