@@ -81,6 +81,7 @@ class UserController implements RootControllerInterface {
 
   async update(req: Request, res: Response) {
     const { body } = req;
+    const { password } = body;
     const { id } = req.params;
 
     try {
@@ -93,9 +94,14 @@ class UserController implements RootControllerInterface {
         return res.status(RESPONSES_TYPES.MODEL_NOT_FOUND).json(modelNotFound);
       }
 
-      // elimina id
-      delete body.id;
-      const userUpdated = await UserModel.update(parseInt(id) as number, body);
+       /**
+       * Hash password and send payload
+       */
+       const newPassword = await hashPassword(password);
+       // elimina id
+       delete body.id;
+       const newBody = { ...body, password: newPassword };
+      const userUpdated = await UserModel.update(parseInt(id) as number, newBody);
       if (userUpdated) {
         return res.status(RESPONSES_TYPES.CREATED).json(userUpdated);
       }
@@ -108,6 +114,8 @@ class UserController implements RootControllerInterface {
           .status(RESPONSES_TYPES.BAD_REQUEST)
           .json({ data: responseError });
       }
+
+      console.log(error);
       return res
         .status(RESPONSES_TYPES.INTERNAL_SERVER_ERROR)
         .json(modelSaveError);

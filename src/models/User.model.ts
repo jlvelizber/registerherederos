@@ -63,6 +63,7 @@ class User implements RootModelInterface {
     return await prisma.user.update({
       where: { id: id },
       data: { ...data },
+      select: this.visibleColumns,
     });
   }
 
