@@ -9,7 +9,7 @@ import {
   modelNotFound,
   modelSaveError,
 } from "../utils";
-import { KidRequestSchema } from "../validations";
+import { KidRequestSchemaOnSave } from "../validations";
 import { ValidationError } from "yup";
 
 class KidController implements RootControllerInterface {
@@ -49,7 +49,7 @@ class KidController implements RootControllerInterface {
 
     try {
       // valida
-      await KidRequestSchema.validate(body, { abortEarly: false });
+      await KidRequestSchemaOnSave.validate(body, { abortEarly: false });
 
       const user = await KidModel.save(body);
       if (user) {
@@ -81,8 +81,11 @@ class KidController implements RootControllerInterface {
       }
 
       // valida
-      await KidRequestSchema.validate(body, { abortEarly: false });
+      body.id = id;
+      await KidRequestSchemaOnSave.validate(body, { abortEarly: false });
 
+      // elimina id
+      delete body.id;
       const userUpdated = await KidModel.update(parseInt(id) as number, body);
       if (userUpdated) {
         return res.status(RESPONSES_TYPES.CREATED).json(userUpdated);

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { KidPayload, PrismaClient } from "@prisma/client";
 import RootModelInterface from "../interfaces/RootModelInterface.interface";
 
 const prisma = new PrismaClient();
@@ -79,6 +79,28 @@ class Kid implements RootModelInterface {
       where: { id },
       data: { deleted_at: new Date() },
     });
+  }
+
+  /**
+   * Busca un nino por identificacion
+   */
+
+  async validateIfKidExistForIdentification(
+    identification: string,
+    idKid?: number
+  ): Promise<boolean> {
+    const kid = await prisma.kid.findFirst({
+      where: {
+        identification: identification,
+        id: {
+          not: idKid,
+        },
+      },
+      select: { identification: true },
+    });
+
+    if (kid && kid.identification) return true;
+    return false;
   }
 }
 
