@@ -60,8 +60,8 @@ model CampusServices {
   Campus      Campus     @relation(fields: [campus_id], references: [id])
   campus_id   Int
   description String
-  start_hour  Int
-  end_hour    Int
+  start_hour  String
+  end_hour    String
   created_at  DateTime   @default(now())
   updated_at  DateTime   @default(now())
   deleted_at  DateTime?

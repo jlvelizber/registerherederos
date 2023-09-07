@@ -5,6 +5,11 @@ export const modelNotFound : MessageResponse = {
     message: 'Model not found'
 }
 
+export const parentModelNotFound : MessageResponse = {
+    ok: false,
+    message: 'Parent model not found'
+}
+
 export const modelSaveError : MessageResponse = {
     ok : false,
     message : 'Model save error'

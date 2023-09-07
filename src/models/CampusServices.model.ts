@@ -19,10 +19,11 @@ class CampusServices implements RootModelInterface {
    *
    * @returns Promise get All Users
    */
-  async listAll(): Promise<any[]> {
+  async listAll(campusId: number): Promise<any[]> {
     const services = await prisma.campusServices.findMany({
       where: {
         deleted_at: null,
+        campus_id: campusId
       },
       select: this.visibleColumns,
     });
