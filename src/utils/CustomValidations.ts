@@ -5,13 +5,12 @@ import {
   existIdentification,
   invalidIdentification,
   notFound,
-} from "../utils";
-import { PrismaClient } from "@prisma/client";
+  sameKidInSameDay,
+} from ".";
 import KidModel from "../models/Kid.model";
 import UserModel from "../models/User.model";
 import CampusServicesModel from "../models/CampusServices.model";
-
-const prisma = new PrismaClient();
+import RegisterModel from "../models/Register.model";
 
 // Extend the yup namespace with the custom method
 declare module "yup" {
@@ -30,6 +29,7 @@ declare module "yup" {
     existUser(customMessage?: string): this;
     existKid(customMessage?: string): this;
     existService(customMessage?: string): this;
+    sameKidAgain(customMessage?: string): this; // Valida si el mismo nino asiste al mismo dia en el mismo servicio
   }
 }
 
@@ -144,7 +144,7 @@ export function CustomValidations() {
 
         const userId = parent.register_user_id;
 
-        const existUser = UserModel.find(userId);
+        const existUser = await UserModel.find(userId);
 
         if (!existUser) return createError({ path, message });
 
@@ -165,7 +165,7 @@ export function CustomValidations() {
 
         const userId = parent.register_user_id;
 
-        const existUser = UserModel.find(userId);
+        const existUser = await UserModel.find(userId);
 
         if (!existUser) return createError({ path, message });
 
@@ -186,7 +186,7 @@ export function CustomValidations() {
 
         const kidId = parent.kid_id;
 
-        const existKid = KidModel.find(kidId);
+        const existKid = await KidModel.find(kidId);
 
         if (!existKid) return createError({ path, message });
 
@@ -206,7 +206,7 @@ export function CustomValidations() {
 
         const kidId = parent.kid_id;
 
-        const existKid = KidModel.find(kidId);
+        const existKid = await KidModel.find(kidId);
 
         if (!existKid) return createError({ path, message });
 
@@ -229,7 +229,7 @@ export function CustomValidations() {
 
           const service_id = parent.service_id;
 
-          const existService = CampusServicesModel.find(service_id);
+          const existService = await CampusServicesModel.find(service_id);
 
           if (!existService) return createError({ path, message });
 
@@ -253,11 +253,37 @@ export function CustomValidations() {
 
           const service_id = parent.service_id;
 
-          const existService = CampusServicesModel.find(service_id);
+          const existService = await CampusServicesModel.find(service_id);
 
           if (!existService) return createError({ path, message });
 
           return existService;
+        }
+      );
+    }
+  );
+  
+  
+  //Valida si existe un Service
+  Yup.addMethod<Yup.NumberSchema>(
+    Yup.number,
+    "sameKidAgain",
+    function (message) {
+      return this.test(
+        "sameKidAgain",
+        message || sameKidInSameDay,
+        async function (valueParam) {
+          if (!valueParam) return true;
+
+          const { path, createError, parent } = this;
+
+          const {kid_id, service_id} = parent;
+
+          const existService = await RegisterModel.findRegisterSameDay(kid_id, service_id);
+          console.log(existService)
+          if (existService) return createError({ path, message });
+          // Por que no existe el muchacho
+          return true;
         }
       );
     }

@@ -9,7 +9,7 @@ import {
   modelNotFound,
   modelSaveError,
 } from "../utils";
-import { CampusRequest } from "../validations";
+import { CampusRequest } from "../requests";
 import { ValidationError } from "yup";
 
 class CampusController implements RootControllerInterface {

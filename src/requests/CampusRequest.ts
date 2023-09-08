@@ -1,5 +1,5 @@
 import { Campus as CampusPrismaModel } from "@prisma/client";
-import yup from "./../config/yup.config";
+import yup from "../config/yup.config";
 
 export const CampusRequest = yup.object<CampusPrismaModel>().shape({
   name: yup.string().required().min(3).max(60),

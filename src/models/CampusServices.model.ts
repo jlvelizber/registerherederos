@@ -23,7 +23,7 @@ class CampusServices implements RootModelInterface {
     const services = await prisma.campusServices.findMany({
       where: {
         deleted_at: null,
-        campus_id: campusId
+        campus_id: campusId,
       },
       select: this.visibleColumns,
     });

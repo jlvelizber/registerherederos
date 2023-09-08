@@ -28,3 +28,5 @@ export const existEmail = "Email now exists";
 
 
 export const notFound = "not found";
+
+export const sameKidInSameDay = "same kid in same day";

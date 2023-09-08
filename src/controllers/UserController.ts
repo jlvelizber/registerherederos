@@ -11,7 +11,7 @@ import {
   modelSaveError,
 } from "../utils";
 import { ValidationError } from "yup";
-import { UserRequestSchemaOnSave } from "../validations/UserRequest";
+import { UserRequestSchemaOnSave } from "../requests/UserRequest";
 
 class UserController implements RootControllerInterface {
   /**

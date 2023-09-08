@@ -10,7 +10,7 @@ import {
   modelSaveError,
   parentModelNotFound,
 } from "../utils";
-import { CampusServicesRequest } from "../validations";
+import { CampusServicesRequest } from "../requests";
 import { ValidationError } from "yup";
 import Campus from "../models/Campus.model";
 

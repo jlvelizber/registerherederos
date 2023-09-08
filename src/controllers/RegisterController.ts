@@ -8,7 +8,7 @@ import {
   modelNotFound,
   modelSaveError,
 } from "../utils";
-import { RegisterRequest } from "../validations";
+import { RegisterRequest } from "../requests";
 import { ValidationError } from "yup";
 import RegisterModel from "../models/Register.model";
 
@@ -50,9 +50,14 @@ class RegisterController implements RootControllerInterface {
     try {
       await RegisterRequest.validate(body, { abortEarly: false });
 
-      const user = await RegisterModel.save(body);
-      if (user) {
-        return res.status(RESPONSES_TYPES.CREATED).json(user);
+
+      /**
+       * Valida que el mismo niño asista el mismo dia
+       */
+
+      const register = await RegisterModel.save(body);
+      if (register) {
+        return res.status(RESPONSES_TYPES.CREATED).json(register);
       }
 
       return res
@@ -67,6 +72,8 @@ class RegisterController implements RootControllerInterface {
           .status(RESPONSES_TYPES.BAD_REQUEST)
           .json({ data: responseError });
       }
+
+      console.log(error);
 
       return res.status(RESPONSES_TYPES.INTERNAL_SERVER_ERROR).json({ error });
     }

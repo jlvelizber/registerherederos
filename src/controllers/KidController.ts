@@ -9,7 +9,7 @@ import {
   modelNotFound,
   modelSaveError,
 } from "../utils";
-import { KidRequestSchemaOnSave } from "../validations";
+import { KidRequestSchemaOnSave } from "../requests";
 import { ValidationError } from "yup";
 
 class KidController implements RootControllerInterface {

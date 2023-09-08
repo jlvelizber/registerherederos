@@ -1,5 +1,5 @@
 export * from "./KidRequest";
 export * from "./CampusRequest";
-export * from "./CustomValidations";
+export * from "../utils/CustomValidations";
 export * from "./CampusServicesRequest";
 export * from "./RegisterRequest";

@@ -1,5 +1,5 @@
-import yup from "./../config/yup.config";
-import { CustomValidations } from "./CustomValidations";
+import yup from "../config/yup.config";
+import { CustomValidations } from "../utils/CustomValidations";
 
 
 CustomValidations()
