@@ -25,3 +25,6 @@ export const invalidIdentification = "invalid identification";
 export const existIdentification = "identification now exists";
 
 export const existEmail = "Email now exists";
+
+
+export const notFound = "not found";

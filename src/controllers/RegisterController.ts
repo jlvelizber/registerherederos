@@ -8,7 +8,7 @@ import {
   modelNotFound,
   modelSaveError,
 } from "../utils";
-import { CampusRequest } from "../validations";
+import { RegisterRequest } from "../validations";
 import { ValidationError } from "yup";
 import RegisterModel from "../models/Register.model";
 
@@ -48,7 +48,7 @@ class RegisterController implements RootControllerInterface {
     const { body } = req;
 
     try {
-      await CampusRequest.validate(body, { abortEarly: false });
+      await RegisterRequest.validate(body, { abortEarly: false });
 
       const user = await RegisterModel.save(body);
       if (user) {
@@ -84,7 +84,7 @@ class RegisterController implements RootControllerInterface {
     const { id } = req.params;
 
     try {
-      await CampusRequest.validate(body, { abortEarly: false });
+      await RegisterRequest.validate(body, { abortEarly: false });
       const user = await RegisterModel.find(parseInt(id) as number);
       if (!user) {
         return res.status(RESPONSES_TYPES.MODEL_NOT_FOUND).json(modelNotFound);
