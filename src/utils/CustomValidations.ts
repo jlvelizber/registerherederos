@@ -280,7 +280,6 @@ export function CustomValidations() {
           const {kid_id, service_id} = parent;
 
           const existService = await RegisterModel.findRegisterSameDay(kid_id, service_id);
-          console.log(existService)
           if (existService) return createError({ path, message });
           // Por que no existe el muchacho
           return true;

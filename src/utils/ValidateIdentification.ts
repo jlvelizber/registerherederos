@@ -12,12 +12,8 @@ export const ValidateIdentification = (identification: string) => {
         digito =
           parseInt(identification.substring(i, i + 1)) * coefValCedula[i];
         suma += parseInt((digito % 10) + "") + parseInt(digito / 10 + "");
-        //      console.log(suma+" suma"+coefValCedula[i]);
       }
       suma = Math.round(suma);
-      //  console.log(verificador);
-      //  console.log(suma);
-      //  console.log(digito);
       if (Math.round(suma % 10) == 0 && Math.round(suma % 10) == verificador) {
         identificationCorrecta = true;
       } else if (10 - Math.round(suma % 10) == verificador) {

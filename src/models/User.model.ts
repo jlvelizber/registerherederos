@@ -100,6 +100,18 @@ class User implements RootModelInterface {
     if (user && user.email) return true;
     return false;
   }
+
+  /**
+   *
+   * @param email
+   * @returns
+   */
+  async findByEmail(email: string): Promise<any> {
+    return await prisma.user.findFirst({
+      where: { deleted_at: null, email },
+      select: {...this.visibleColumns, password: true },
+    });
+  }
 }
 
 export default new User();

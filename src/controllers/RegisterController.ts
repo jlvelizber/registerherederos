@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import RootControllerInterface from "../interfaces/RootControllerInterface.interface";
-
+import bcrypt from "bcryptjs";
 import {
   RESPONSES_TYPES,
   getErrorsByKeyForm,
@@ -50,12 +50,20 @@ class RegisterController implements RootControllerInterface {
     try {
       await RegisterRequest.validate(body, { abortEarly: false });
 
-
       /**
        * Valida que el mismo niño asista el mismo dia
        */
 
-      const register = await RegisterModel.save(body);
+      const salt = bcrypt.genSaltSync();
+      const newPass = bcrypt.hashSync(body.password, salt);
+
+      const newBody = {
+        ...body,
+        password: newPass,
+      };
+
+      const register = await RegisterModel.save(newBody);
+
       if (register) {
         return res.status(RESPONSES_TYPES.CREATED).json(register);
       }

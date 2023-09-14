@@ -51,6 +51,7 @@ class UserController implements RootControllerInterface {
     const { password } = body;
 
     try {
+      
       await UserRequestSchemaOnSave.validate(body, { abortEarly: false });
 
       /**
