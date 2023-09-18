@@ -21,8 +21,8 @@ export const validarJWT = (req:  Request, res : Response, next: NextFunction) =>
         
         const {uid, name} = jwt.verify(token, key )
         
-        req.body.uid = uid;
-        req.body.name = name;
+        // req.body.uid = uid;
+        // req.body.name = name;
         
     } catch (error) {
         return  res.status(401).send({

@@ -68,6 +68,7 @@ class CampusServicesController implements RootControllerInterface {
 
     const { body } = req;
 
+    
     try {
       const campus = await Campus.find(parseInt(campusId) as number);
       // if doesn't exist
