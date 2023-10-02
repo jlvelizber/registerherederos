@@ -122,6 +122,17 @@ class KidController implements RootControllerInterface {
       return res.status(RESPONSES_TYPES.SUCCESS).json(modelDeletedSuccessfully);
     }
   }
+
+  async queryKids(req: Request, res: Response) {
+    const {
+      query: { query },
+    } = req;
+
+    if (query?.length) {
+      const results = await KidModel.queryKids(query as string);
+      return res.status(RESPONSES_TYPES.SUCCESS).json(results);
+    }
+  }
 }
 
 export default new KidController();

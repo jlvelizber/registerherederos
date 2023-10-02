@@ -102,6 +102,36 @@ class Kid implements RootModelInterface {
     if (kid && kid.identification) return true;
     return false;
   }
+
+  async queryKids(query: string) {
+    const kids = await prisma.kid.findMany({
+      where: {
+        OR: [
+          {
+            identification: {
+              contains: `${query}`,
+            },
+          },
+          {
+            name: {
+              contains: `${query}`,
+            },
+          },
+          {
+            lastname: {
+              contains: `${query}`,
+            },
+          },
+          {
+            parent_name: {
+              contains: `${query}`,
+            },
+          },
+        ],
+      },
+    });
+    return kids;
+  }
 }
 
 export default new Kid();
