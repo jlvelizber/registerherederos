@@ -18,12 +18,19 @@ class Register implements RootModelInterface {
    *
    * @returns Promise get All Registers
    */
-  async listAll(): Promise<any[]> {
+  async listAll(params: any): Promise<any[]> {
     const registers = await prisma.register.findMany({
       where: {
+        service_id: parseInt(params.serviceId) as number,
         deleted_at: null,
+        created_at: {
+          gte: new Date(params.startDate),
+          lte: new Date(params.endDate),
+        },
       },
-      select: this.visibleColumns,
+      select: {
+        kid: true,
+      },
     });
 
     return registers;
@@ -71,7 +78,7 @@ class Register implements RootModelInterface {
    */
   async delete(id: number): Promise<any> {
     return await prisma.register.update({
-      where: { id: id },
+      where: { id },
       data: { deleted_at: new Date() },
     });
   }
@@ -80,22 +87,26 @@ class Register implements RootModelInterface {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
 
-  
     const register = await prisma.register.findFirst({
       where: {
         AND: [
           {
             kid_id: kidId,
             service_id: serviceId,
-            created_at:{
-              gte: currentDate
+            created_at: {
+              gte: currentDate,
+            },
+          },
+          {
+            deleted_at: {
+              equals: null,
             },
           },
         ],
       },
     });
-
-    return register ? true : false;
+    console.log(register);
+    return register;
   }
 }
 

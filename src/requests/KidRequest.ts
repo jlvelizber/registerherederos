@@ -11,7 +11,7 @@ export const KidRequestSchemaOnSave = yup.object().shape({
     .uniqueKidIdentification("La cédula del niño ya existe")
     .required(),
   lastname: yup.string().required().min(3).max(60),
-  email: yup.string().email().min(3).max(120),
+  date_born: yup.date().required(),
   parent_name: yup.string().required().min(3).max(60),
   parent_lastname: yup.string().required().min(3).max(60),
   parent_email: yup.string().email().min(3).max(120),

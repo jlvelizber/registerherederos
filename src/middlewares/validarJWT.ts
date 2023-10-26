@@ -20,6 +20,10 @@ export const validarJWT = (req:  Request, res : Response, next: NextFunction) =>
         const key = process.env.SECRET_JWT_KEY;
         
         const {uid, name} = jwt.verify(token, key )
+
+        // console.log(name)
+
+        req.headers['auth'] = uid;
         
         // req.body.uid = uid;
         // req.body.name = name;

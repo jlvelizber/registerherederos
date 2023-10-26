@@ -9,7 +9,7 @@ class Kid implements RootModelInterface {
     identification: true,
     name: true,
     lastname: true,
-    email: true,
+    date_born: true,
     parent_name: true,
     parent_lastname: true,
     parent_email: true,
@@ -52,9 +52,14 @@ class Kid implements RootModelInterface {
    * @returns
    */
   async save(body: any): Promise<any> {
-    return await prisma.kid.create({
-      data: { ...body },
-    });
+    try {
+      const kid = await prisma.kid.create({
+        data: { ...body, date_born: new Date(body.date_born) },
+      });
+      return kid;
+    } catch (error: any) {
+      throw new Error(error);
+    }
   }
 
   /**
@@ -102,7 +107,11 @@ class Kid implements RootModelInterface {
     if (kid && kid.identification) return true;
     return false;
   }
-
+  /**
+   * 
+   * @param query Busca el nino por algunas cosas
+   * @returns 
+   */
   async queryKids(query: string) {
     const kids = await prisma.kid.findMany({
       where: {

@@ -3,6 +3,7 @@ import RootControllerInterface from "../interfaces/RootControllerInterface.inter
 import bcrypt from "bcryptjs";
 import {
   RESPONSES_TYPES,
+  formatDate,
   getErrorsByKeyForm,
   modelDeletedSuccessfully,
   modelNotFound,
@@ -19,8 +20,29 @@ class RegisterController implements RootControllerInterface {
    * @param res
    */
   async list(req: Request, res: Response) {
-    const registers = await RegisterModel.listAll();
-    return res.status(RESPONSES_TYPES.SUCCESS).json(registers);
+    const { query } = req;
+
+    let serviceId = "1";
+
+    if (query.hasOwnProperty("service_id")) {
+      serviceId = query.service_id as string;
+    }
+
+    const startDate = formatDate() + " 00:00:00";
+    const endDate = formatDate() + " 23:59:59";
+
+    const registers = await RegisterModel.listAll({
+      serviceId,
+      startDate,
+      endDate,
+    });
+
+    const kidRegisters: any = [];
+    if (registers.length > 0) {
+      registers.forEach((reg) => kidRegisters.push(reg.kid));
+    }
+
+    return res.status(RESPONSES_TYPES.SUCCESS).json(kidRegisters);
   }
 
   /**
@@ -45,24 +67,12 @@ class RegisterController implements RootControllerInterface {
    * @returns
    */
   async save(req: Request, res: Response) {
-    const { body } = req;
+    const { body, headers } = req;
 
     try {
       await RegisterRequest.validate(body, { abortEarly: false });
 
-      /**
-       * Valida que el mismo niño asista el mismo dia
-       */
-
-      const salt = bcrypt.genSaltSync();
-      const newPass = bcrypt.hashSync(body.password, salt);
-
-      const newBody = {
-        ...body,
-        password: newPass,
-      };
-
-      const register = await RegisterModel.save(newBody);
+      const register = await RegisterModel.save(body);
 
       if (register) {
         return res.status(RESPONSES_TYPES.CREATED).json(register);
@@ -133,18 +143,46 @@ class RegisterController implements RootControllerInterface {
    * @returns
    */
   async delete(req: Request, res: Response) {
-    const { id } = req.params;
+    const {
+      params: { id },
+      body: { service_id },
+    } = req;
 
-    const user = await RegisterModel.find(parseInt(id) as number);
-    if (!user) {
+    const register = await RegisterModel.findRegisterSameDay(
+      parseInt(id) as number,
+      service_id
+    );
+    if (!register) {
       return res.status(RESPONSES_TYPES.MODEL_NOT_FOUND).json(modelNotFound);
     }
 
-    const deletedModel = await RegisterModel.delete(parseInt(id) as number);
+    const deletedModel = await RegisterModel.delete(register.id);
 
     if (deletedModel) {
       return res.status(RESPONSES_TYPES.SUCCESS).json(modelDeletedSuccessfully);
     }
+  }
+
+  async queryReporter(req: Request, res: Response) {
+    const {
+      query: { service_id: serviceId, date },
+    } = req;
+
+    const startDate = date + " 00:00:00";
+    const endDate = date + " 23:59:59";
+
+    const registers = await RegisterModel.listAll({
+      serviceId,
+      startDate,
+      endDate,
+    });
+
+    const kidRegisters: any = [];
+    if (registers.length > 0) {
+      registers.forEach((reg) => kidRegisters.push(reg.kid));
+    }
+
+    return res.status(RESPONSES_TYPES.SUCCESS).json(kidRegisters);
   }
 }
 

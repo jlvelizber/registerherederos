@@ -46,11 +46,10 @@ class KidController implements RootControllerInterface {
    */
   async save(req: Request, res: Response) {
     const { body } = req;
-
     try {
       // valida
       await KidRequestSchemaOnSave.validate(body, { abortEarly: false });
-
+      
       const user = await KidModel.save(body);
       if (user) {
         return res.status(RESPONSES_TYPES.CREATED).json(user);
