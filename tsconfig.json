@@ -7,6 +7,6 @@
     "resolveJsonModule": true,
     "strict": true
   },
-  "include": ["src/**/*.ts", "src/prisma/**/*.ts"],
+  "include": ["*.ts","src/**/*.ts", "src/prisma/**/*.ts"],
   "exclude": ["node_modules"]
 }
