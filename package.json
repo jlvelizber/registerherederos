@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon index.ts",
     "build": "tsc --b",
-    "migrate": "prisma migrate deploy",
+    "prisma": "prisma generate",
     "start": "node dist/index.js"
   },
   "license": "MIT",
