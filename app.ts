@@ -14,6 +14,11 @@ app.use(cors());
 // ROUTES
 app.use("/api/v2", routes);
 
+
+app.get("*", (req, res) => {
+  res.sendFile(__dirname + "/public/index.html");
+});
+
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response) => {
   // console.error(err);
