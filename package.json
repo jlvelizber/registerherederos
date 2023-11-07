@@ -5,7 +5,7 @@
   "main": "index.js",
   "author": "Jorge Veliz",
   "scripts": {
-    "dev": "nodemon index.ts",
+    "dev": "nodemon inde",
     "build": "tsc --b",
     "prisma": "prisma generate",
     "start": "node dist/index.js"
