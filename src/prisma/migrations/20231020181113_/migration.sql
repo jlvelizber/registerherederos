@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE `kid` MODIFY `date_born` DATE NULL;
+ALTER TABLE `Kid` MODIFY `date_born` DATE NULL;
