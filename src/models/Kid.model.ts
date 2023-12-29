@@ -1,4 +1,4 @@
-import { KidPayload, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import RootModelInterface from "../interfaces/RootModelInterface.interface";
 
 const prisma = new PrismaClient();
