@@ -64,7 +64,9 @@ class KidController implements RootControllerInterface {
           .json({ data: responseError });
       }
 
-      return res.status(RESPONSES_TYPES.INTERNAL_SERVER_ERROR).json({ error });
+      console.log({error})
+
+      return res.status(RESPONSES_TYPES.INTERNAL_SERVER_ERROR).json( error );
     }
   }
 
