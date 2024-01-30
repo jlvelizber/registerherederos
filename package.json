@@ -6,7 +6,7 @@
   "author": "Jorge Veliz",
   "scripts": {
     "dev": "nodemon inde",
-    "build": "tsc --b",
+    "build": "tsc --b && cp index.html dist/",
     "prisma": "prisma generate",
     "start": "node dist/index.js"
   },
