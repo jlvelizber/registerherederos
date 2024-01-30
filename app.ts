@@ -16,7 +16,7 @@ app.use("/api/v2", routes);
 
 
 app.get("*", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
+  res.sendFile(__dirname + "/public/dist/index.html");
 });
 
 // Error handling middleware
