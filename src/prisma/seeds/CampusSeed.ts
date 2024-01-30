@@ -1,5 +1,5 @@
-import { Campus, CampusPayload, PrismaClient } from "@prisma/client";
-import { GetResult } from "@prisma/client/runtime";
+import {  PrismaClient } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
 const campus = [
