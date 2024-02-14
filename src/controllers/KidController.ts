@@ -49,7 +49,7 @@ class KidController implements RootControllerInterface {
     try {
       // valida
       await KidRequestSchemaOnSave.validate(body, { abortEarly: false });
-      
+
       const user = await KidModel.save(body);
       if (user) {
         return res.status(RESPONSES_TYPES.CREATED).json(user);
@@ -59,14 +59,12 @@ class KidController implements RootControllerInterface {
         // Extrae y formatea los errores que vienen desde yup
         const responseError = getErrorsByKeyForm(error);
 
-        return res
-          .status(RESPONSES_TYPES.BAD_REQUEST)
-          .json({ data: responseError });
+        return res.status(RESPONSES_TYPES.BAD_REQUEST).json({ ...responseError });
       }
 
-      console.log({error})
+      console.log({ error });
 
-      return res.status(RESPONSES_TYPES.INTERNAL_SERVER_ERROR).json( error );
+      return res.status(RESPONSES_TYPES.INTERNAL_SERVER_ERROR).json(error);
     }
   }
 

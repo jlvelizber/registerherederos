@@ -7,11 +7,11 @@ export const KidRequestSchemaOnSave = yup.object().shape({
   name: yup.string().required().min(3).max(60),
   identification: yup
     .string()
-    .verifyIdentification()
+    .verifyIdentification("Identificación inválida")
     .uniqueKidIdentification("La cédula del niño ya existe")
     .required(),
   lastname: yup.string().required().min(3).max(60),
-  date_born: yup.date().required(),
+  date_born: yup.date().required("Fecha inválida"),
   parent_name: yup.string().required().min(3).max(60),
   parent_lastname: yup.string().required().min(3).max(60),
   parent_email: yup.string().email().min(3).max(120),
