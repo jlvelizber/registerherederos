@@ -1,3 +1,5 @@
+import { differenceInYears } from "date-fns";
+
 export function formatDate() {
     const date = new Date()
     const year = date.getFullYear();
@@ -7,3 +9,7 @@ export function formatDate() {
     
     return `${year}-${month}-${day}`;
 }
+
+export const getYearOld = (date: string): number => {
+    return differenceInYears(new Date(), new Date(date));
+  };

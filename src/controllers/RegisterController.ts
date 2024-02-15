@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
+import excelJs from "exceljs";
 import RootControllerInterface from "../interfaces/RootControllerInterface.interface";
 import bcrypt from "bcryptjs";
 import {
   RESPONSES_TYPES,
   formatDate,
   getErrorsByKeyForm,
+  getYearOld,
   modelDeletedSuccessfully,
   modelNotFound,
   modelSaveError,
@@ -12,6 +14,7 @@ import {
 import { RegisterRequest } from "../requests";
 import { ValidationError } from "yup";
 import RegisterModel from "../models/Register.model";
+import { Kid } from "@prisma/client";
 
 class RegisterController implements RootControllerInterface {
   /**
@@ -183,6 +186,50 @@ class RegisterController implements RootControllerInterface {
     }
 
     return res.status(RESPONSES_TYPES.SUCCESS).json(kidRegisters);
+  }
+
+  async exportXlSQueryReporter(req: Request, res: Response) {
+    const { serviceId, dateString } = req.body;
+
+    const startDate = dateString + " 00:00:00";
+    const endDate = dateString + " 23:59:59";
+
+    const registers = await RegisterModel.listAll({
+      serviceId,
+      startDate,
+      endDate,
+    });
+
+    const workBook = new excelJs.Workbook();
+
+    const workSheet = workBook.addWorksheet("Niños");
+
+    workSheet.columns = [
+      { header: "Identificación del niño", key: "identification" },
+      { header: "Nombre", key: "name" },
+      { header: "Apellidos", key: "lastname" },
+      { header: "Edad", key: "date_born" },
+      { header: "Contacto", key: "parent_phone" },
+    ];
+
+    registers.forEach((reg) => {
+      workSheet.addRow({
+        ...reg.kid,
+        date_born: `${getYearOld(reg.kid.date_born)} año(s)`,
+      });
+    });
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=" + "users.xlsx"
+    );
+
+    // Write the workbook to the response object
+    workBook.xlsx.write(res).then(() => res.end());
   }
 }
 
