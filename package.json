@@ -37,7 +37,8 @@
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.3",
     "prisma": "^4.16.1",
-    "yup": "^1.2.0"
+    "yup": "^1.2.0",
+    "@isirthijs/barcode-scanner":"1.2.0"
   },
   "prisma": {
     "schema": "src/prisma/schema.prisma",
