@@ -5,7 +5,7 @@
   "main": "index.js",
   "author": "Jorge Veliz",
   "scripts": {
-    "dev": "nodemon inde",
+    "dev": "nodemon index",
     "build": "tsc --b && cp index.html dist/",
     "prisma": "prisma generate",
     "start": "node dist/index.js"
@@ -35,10 +35,10 @@
     "exceljs": "^4.4.0",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
+    "node-hid": "^3.0.0",
     "nodemailer": "^6.9.3",
     "prisma": "^4.16.1",
-    "yup": "^1.2.0",
-    "@isirthijs/barcode-scanner":"1.2.0"
+    "yup": "^1.2.0"
   },
   "prisma": {
     "schema": "src/prisma/schema.prisma",
