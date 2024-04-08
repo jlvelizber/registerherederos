@@ -4,6 +4,7 @@ import KidModel from "../models/Kid.model";
 
 import {
   RESPONSES_TYPES,
+  generateQRForKids,
   getErrorsByKeyForm,
   modelDeletedSuccessfully,
   modelNotFound,
@@ -11,6 +12,7 @@ import {
 } from "../utils";
 import { KidRequestSchemaOnSave } from "../requests";
 import { ValidationError } from "yup";
+import { QrKidInterface } from "../interfaces";
 
 class KidController implements RootControllerInterface {
   /**
@@ -51,8 +53,17 @@ class KidController implements RootControllerInterface {
       await KidRequestSchemaOnSave.validate(body, { abortEarly: false });
 
       const user = await KidModel.save(body);
-      if (user) {
-        return res.status(RESPONSES_TYPES.CREATED).json(user);
+
+      /**
+       * GENERACION DE QR INICIAL
+       */
+      const qrForKids: any = await generateQRForKids(user);
+
+      const userWithQr: QrKidInterface = { ...user, qr: qrForKids }
+
+
+      if (user && userWithQr) {
+        return res.status(RESPONSES_TYPES.CREATED).json(userWithQr);
       }
     } catch (error) {
       if (error instanceof ValidationError) {
