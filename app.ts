@@ -1,28 +1,61 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application } from "express";
+import dontenv from "dotenv";
 import routes from "./src/routes";
 import cors from "cors";
-const app: Application = express();
+import { Server as ServerHttp, createServer } from "http";
+import { Server } from "socket.io";
+import { QrReaderEvent } from "./src/events";
+const PORT = process.env.PORT || 3000;
 
-// Directorio publico
-app.use(express.static("public"));
+const defaultSocketOptions = {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'HEAD', 'OPTIONS', 'POST'],
+  }
+}
 
-// Middleware
-app.use(express.json());
+export default class App {
 
-app.use(cors());
+  app: Application;
+  http: ServerHttp;
+  io: Server;
 
-// ROUTES
-app.use("/api/v2", routes);
+  constructor() {
+    dontenv.config();
+    this.app = express();
+    this.http = createServer(this.app);
+    this.io = new Server(this.http, defaultSocketOptions)
 
+    this.#init()
+  }
 
-app.get("*", (req, res) => {
-  res.sendFile(__dirname + "/dist/index.html");
-});
+  #init() {
+    this.#initCors()
+    this.#configRequest()
+    this.#configRouter()
+    this.#initSockets()
+    this.#run()
+  }
 
-// Error handling middleware
-app.use((err: Error, req: Request, res: Response) => {
-  // console.error(err);
-  res.status(500).json({ message: "Internal Server Error" });
-});
+  #initCors() {
+    this.app.use(cors());
+  }
 
-export default app;
+  #configRequest() {
+    this.app.use(express.json())
+    this.app.use(express.static("public"))
+  }
+
+  #configRouter() {
+    this.app.use('/api/v2/', routes)
+  }
+
+  #initSockets() {
+    this.io.on('connection', QrReaderEvent)
+  }
+
+  #run() {
+    this.http.listen(PORT, () => console.log(`Conectado desde el puerto ${PORT}`))
+  }
+
+}
