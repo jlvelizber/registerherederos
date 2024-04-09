@@ -1,5 +1,5 @@
 import { PrismaClient, Role } from "@prisma/client";
-import { hashPassword } from "../../utils";
+import { hasString } from "../../utils";
 const prisma = new PrismaClient();
 
 const passwordResult: string = "123456";
@@ -24,7 +24,7 @@ const users = [
 ];
 
 export const migrateUsers = async () => {
-  const passwordHashResult = await hashPassword(passwordResult);
+  const passwordHashResult = await hasString(passwordResult);
 
   const newUsers = users.map((user) => {
     return {

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `kid` ADD COLUMN `qr` VARCHAR(150) NULL;

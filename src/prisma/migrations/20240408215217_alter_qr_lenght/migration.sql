@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `kid` MODIFY `qr` VARCHAR(255) NULL;

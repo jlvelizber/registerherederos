@@ -38,6 +38,7 @@ model Kid {
   parent_email    String?    @db.VarChar(120)
   parent_phone    String     @db.VarChar(10)
   date_born       DateTime?  @db.Date()
+  qr              String?     @db.VarChar(255)
   created_at      DateTime   @default(now())
   updated_at      DateTime   @default(now())
   deleted_at      DateTime?

@@ -4,15 +4,15 @@ import KidModel from "../models/Kid.model";
 
 import {
   RESPONSES_TYPES,
-  generateQRForKids,
+  generateQR,
+  generateTokenForQrKids,
   getErrorsByKeyForm,
   modelDeletedSuccessfully,
   modelNotFound,
-  modelSaveError,
 } from "../utils";
 import { KidRequestSchemaOnSave } from "../requests";
 import { ValidationError } from "yup";
-import { QrKidInterface } from "../interfaces";
+import { Kid } from "@prisma/client";
 
 class KidController implements RootControllerInterface {
   /**
@@ -52,15 +52,16 @@ class KidController implements RootControllerInterface {
       // valida
       await KidRequestSchemaOnSave.validate(body, { abortEarly: false });
 
-      const user = await KidModel.save(body);
+      const user: Kid = await KidModel.save(body);
 
       /**
        * GENERACION DE QR INICIAL
        */
-      const qrForKids: any = await generateQRForKids(user);
-
-      const userWithQr: QrKidInterface = { ...user, qr: qrForKids }
-
+      user.qr = await generateTokenForQrKids(user);
+      await KidModel.update(user.id, user);
+      
+      const qrForKids: any = await generateQR(user.qr);
+      const userWithQr: Kid = { ...user, qr: qrForKids }
 
       if (user && userWithQr) {
         return res.status(RESPONSES_TYPES.CREATED).json(userWithQr);

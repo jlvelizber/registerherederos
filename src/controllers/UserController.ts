@@ -5,7 +5,7 @@ import UserModel from "../models/User.model";
 import {
   RESPONSES_TYPES,
   getErrorsByKeyForm,
-  hashPassword,
+  hasString,
   modelDeletedSuccessfully,
   modelNotFound,
   modelSaveError,
@@ -57,7 +57,7 @@ class UserController implements RootControllerInterface {
       /**
        * Hash password and send payload
        */
-      const newPassword = await hashPassword(password);
+      const newPassword = await hasString(password);
       const newBody = { ...body, password: newPassword };
 
       const user = await UserModel.save(newBody);
@@ -98,7 +98,7 @@ class UserController implements RootControllerInterface {
        /**
        * Hash password and send payload
        */
-       const newPassword = await hashPassword(password);
+       const newPassword = await hasString(password);
        // elimina id
        delete body.id;
        const newBody = { ...body, password: newPassword };

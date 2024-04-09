@@ -1,9 +1,10 @@
+import { Kid } from "@prisma/client";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const ALGSALT: string | number = process.env.ALGSALT || 10;
 
-export async function hashPassword(plainPassword: string) {
+export async function hasString(plainPassword: string) {
   const hash = await bcryptjs.hash(plainPassword, 10);
   return hash;
 }
@@ -41,4 +42,11 @@ export function generarJWT(uid: string, name: string) {
       }
     );
   });
+}
+
+export async function generateTokenForQrKids(kid: Kid) {
+  const { id, name, lastname } = kid
+  const dataForEncription = id + '_' + name + '_' + lastname
+  return await hasString(dataForEncription)
+
 }

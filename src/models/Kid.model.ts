@@ -141,6 +141,16 @@ class Kid implements RootModelInterface {
     });
     return kids;
   }
+
+  /**
+   * 
+   */
+  async findByQr(qrstring: string) {
+    return await prisma.kid.findFirst({
+      where: { deleted_at: null, qr: qrstring },
+      select: { ...this.visibleColumns,  qr: true },
+    });
+  }
 }
 
 export default new Kid();
