@@ -5,8 +5,7 @@ export const QrReaderEvent = (socket: Socket) => {
     socket.on(`${EVENTS_NAME.QR_READ}`, async (qr: string) => {
         if (!qr) return;
         const existKid = await KidModel.findByQr(qr)
-        console.log('entra',existKid)
-        //  $2a$10$wDg7TgNUfU34ix4.HdPJtuadaEgb8CEtjSASsYjo3qm7StzX1/9Bu
+        // EXISTE NIñO?
         if (existKid) {
             socket.emit(EVENTS_NAME.QR_EXIST_KID, { ...existKid })
         } else {

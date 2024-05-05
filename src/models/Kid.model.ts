@@ -12,6 +12,7 @@ class Kid implements RootModelInterface {
     date_born: true,
     parent_name: true,
     parent_lastname: true,
+    qr: true,
     parent_email: true,
     parent_phone: true,
     created_at: true,
@@ -148,7 +149,7 @@ class Kid implements RootModelInterface {
   async findByQr(qrstring: string) {
     return await prisma.kid.findFirst({
       where: { deleted_at: null, qr: qrstring },
-      select: { ...this.visibleColumns,  qr: true },
+      select: { ...this.visibleColumns },
     });
   }
 }

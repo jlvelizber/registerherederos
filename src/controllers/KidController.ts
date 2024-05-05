@@ -22,6 +22,13 @@ class KidController implements RootControllerInterface {
    */
   async list(req: Request, res: Response) {
     const users = await KidModel.listAll();
+
+    for (let index = 0; index < users.length; index++) {
+      const element = users[index];
+      element['qr'] = element?.qr && await generateQR(element?.qr)
+
+    }
+
     return res.status(RESPONSES_TYPES.SUCCESS).json(users);
   }
 
@@ -59,7 +66,7 @@ class KidController implements RootControllerInterface {
        */
       user.qr = await generateTokenForQrKids(user);
       await KidModel.update(user.id, user);
-      
+
       const qrForKids: any = await generateQR(user.qr);
       const userWithQr: Kid = { ...user, qr: qrForKids }
 

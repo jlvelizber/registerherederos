@@ -45,8 +45,8 @@ export function generarJWT(uid: string, name: string) {
 }
 
 export async function generateTokenForQrKids(kid: Kid) {
-  const { id, name, lastname } = kid
-  const dataForEncription = id + '_' + name + '_' + lastname
+  const { id, name } = kid
+  const dataForEncription = id + '_' + name
   return await hasString(dataForEncription)
 
 }
