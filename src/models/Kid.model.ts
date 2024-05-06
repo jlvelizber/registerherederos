@@ -152,6 +152,19 @@ class Kid implements RootModelInterface {
       select: { ...this.visibleColumns },
     });
   }
+
+
+  async getAllKidsWithoutQr() {
+    const kids = await prisma.kid.findMany({
+      where: {
+        deleted_at: null,
+        qr: null
+      },
+      select: this.visibleColumns,
+    });
+
+    return kids;
+  }
 }
 
 export default new Kid();
