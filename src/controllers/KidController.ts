@@ -10,7 +10,7 @@ import {
   modelDeletedSuccessfully,
   modelNotFound,
 } from "../utils";
-import { KidRequestSchemaOnSave } from "../requests";
+import { KidRequestSchemaOnSave, KidRequestSchemaOnUpdate } from "../requests";
 import { ValidationError } from "yup";
 import { Kid } from "@prisma/client";
 
@@ -93,20 +93,20 @@ class KidController implements RootControllerInterface {
 
     try {
       // validamos si existe el modelo
-      const user = await KidModel.find(parseInt(id) as number);
-      if (!user) {
+      const kid = await KidModel.find(parseInt(id) as number);
+      if (!kid) {
         return res.status(RESPONSES_TYPES.MODEL_NOT_FOUND).json(modelNotFound);
       }
 
       // valida
-      body.id = id;
-      await KidRequestSchemaOnSave.validate(body, { abortEarly: false });
+      // body.id = id;
+      await KidRequestSchemaOnUpdate.validate(body, { abortEarly: false });
 
       // elimina id
       delete body.id;
-      const userUpdated = await KidModel.update(parseInt(id) as number, body);
-      if (userUpdated) {
-        return res.status(RESPONSES_TYPES.CREATED).json(userUpdated);
+      const kidUpdated = await KidModel.update(parseInt(id) as number, body);
+      if (kidUpdated) {
+        return res.status(RESPONSES_TYPES.CREATED).json(kidUpdated);
       }
     } catch (error) {
       if (error instanceof ValidationError) {
@@ -115,7 +115,7 @@ class KidController implements RootControllerInterface {
 
         return res
           .status(RESPONSES_TYPES.BAD_REQUEST)
-          .json({ data: responseError });
+          .json({ ...responseError });
       }
     }
   }

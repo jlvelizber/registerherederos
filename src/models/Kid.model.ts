@@ -71,7 +71,7 @@ class Kid implements RootModelInterface {
   async update(id: number, data: any): Promise<any> {
     return await prisma.kid.update({
       where: { id },
-      data: { ...data },
+      data: { ...data, date_born: new Date(data.date_born) },
     });
   }
 
