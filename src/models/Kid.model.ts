@@ -18,6 +18,7 @@ class Kid implements RootModelInterface {
     created_at: true,
     updated_at: true,
     deleted_at: false,
+    address: true
   };
 
   /**
