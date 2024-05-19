@@ -139,7 +139,13 @@ class Kid implements RootModelInterface {
             },
           },
         ],
+        AND: [
+          {
+            deleted_at: null
+          }
+        ]
       },
+
     });
     return kids;
   }
