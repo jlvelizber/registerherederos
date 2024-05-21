@@ -15,7 +15,7 @@ export const KidRequestSchemaOnSave = yup.object().shape({
   parent_name: yup.string().required().min(3).max(60),
   parent_lastname: yup.string().required().min(3).max(60),
   parent_email: yup.string().nullable().email(),
-  parent_phone: yup.string().required().min(10).max(10),
+  parent_phone: yup.string().required().min(9).max(11),
 });
 
 export const KidRequestSchemaOnUpdate = yup.object().shape({
