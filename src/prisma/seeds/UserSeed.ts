@@ -21,6 +21,14 @@ const users = [
     created_at: new Date(),
     updated_at: new Date(),
   },
+  {
+    name: "Campus",
+    lastname: "Norte",
+    email: "campus@familiadedios.com.ec",
+    role: Role.user,
+    created_at: new Date(),
+    updated_at: new Date(),
+  },
 ];
 
 export const migrateUsers = async () => {

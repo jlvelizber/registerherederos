@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 async function main() {
   await migrateUsers();
   await migrateCampus();
-  await migrateKids();
+  // await migrateKids();
 }
 
 main()
