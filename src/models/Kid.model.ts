@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { KidPayload, PrismaClient } from "@prisma/client";
 import RootModelInterface from "../interfaces/RootModelInterface.interface";
 
 const prisma = new PrismaClient();
@@ -33,7 +33,15 @@ class Kid implements RootModelInterface {
       select: this.visibleColumns,
     });
 
-    return kids;
+    // Formatea la fecha de nacimiento del niño
+    const kidsFormatteds = kids.map((kid) => {
+      return {
+        ...kid,
+        date_born: kid.date_born?.toISOString().split('T')[0]
+      };
+    });
+
+    return kidsFormatteds;
   }
 
   /**
