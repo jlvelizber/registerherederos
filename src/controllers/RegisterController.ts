@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import excelJs from "exceljs";
-import RootControllerInterface from "../interfaces/RootControllerInterface.interface";
-import bcrypt from "bcryptjs";
+import {RootControllerInterface} from "../interfaces";
 import {
   RESPONSES_TYPES,
   formatDate,
@@ -13,8 +12,8 @@ import {
 } from "../utils";
 import { RegisterRequest } from "../requests";
 import { ValidationError } from "yup";
+
 import RegisterModel from "../models/Register.model";
-import { Kid } from "@prisma/client";
 
 class RegisterController implements RootControllerInterface {
   /**
@@ -27,7 +26,7 @@ class RegisterController implements RootControllerInterface {
 
     let serviceId = "1";
 
-    if (query.hasOwnProperty("service_id")) {
+    if (Object.prototype.hasOwnProperty.call(query, "service_id")) {
       serviceId = query.service_id as string;
     }
 

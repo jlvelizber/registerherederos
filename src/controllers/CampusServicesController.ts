@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import RootControllerInterface from "../interfaces/RootControllerInterface.interface";
+import { RootControllerInterface } from "../interfaces";
 import CampusServices from "../models/CampusServices.model";
 
 import {
@@ -68,7 +68,7 @@ class CampusServicesController implements RootControllerInterface {
 
     const { body } = req;
 
-    
+
     try {
       const campus = await Campus.find(parseInt(campusId) as number);
       // if doesn't exist

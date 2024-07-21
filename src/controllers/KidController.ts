@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import RootControllerInterface from "../interfaces/RootControllerInterface.interface";
+import {RootControllerInterface} from "../interfaces";
 import KidModel from "../models/Kid.model";
 
 import {

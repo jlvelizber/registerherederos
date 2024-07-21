@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-export default interface RootControllerInterface
+export interface RootControllerInterface
 {
     list?(req: Request, res : Response) : void
     get?(req: Request, res: Response): void

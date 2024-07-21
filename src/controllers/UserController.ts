@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import RootControllerInterface from "../interfaces/RootControllerInterface.interface";
+import { RootControllerInterface } from "../interfaces";
 import UserModel from "../models/User.model";
 
 import {
@@ -51,7 +51,7 @@ class UserController implements RootControllerInterface {
     const { password } = body;
 
     try {
-      
+
       await UserRequestSchemaOnSave.validate(body, { abortEarly: false });
 
       /**
@@ -95,13 +95,13 @@ class UserController implements RootControllerInterface {
         return res.status(RESPONSES_TYPES.MODEL_NOT_FOUND).json(modelNotFound);
       }
 
-       /**
-       * Hash password and send payload
-       */
-       const newPassword = await hasString(password);
-       // elimina id
-       delete body.id;
-       const newBody = { ...body, password: newPassword };
+      /**
+      * Hash password and send payload
+      */
+      const newPassword = await hasString(password);
+      // elimina id
+      delete body.id;
+      const newBody = { ...body, password: newPassword };
       const userUpdated = await UserModel.update(parseInt(id) as number, newBody);
       if (userUpdated) {
         return res.status(RESPONSES_TYPES.CREATED).json(userUpdated);
