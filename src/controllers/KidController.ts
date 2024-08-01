@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
-import {RootControllerInterface} from "../interfaces";
+import { RootControllerInterface } from "../interfaces";
 import KidModel from "../models/Kid.model";
 
+import { Kid } from "@prisma/client";
+import { ValidationError } from "yup";
+import { KidRequestSchemaOnSave, KidRequestSchemaOnUpdate } from "../requests";
 import {
   RESPONSES_TYPES,
   generateQR,
@@ -10,9 +13,6 @@ import {
   modelDeletedSuccessfully,
   modelNotFound,
 } from "../utils";
-import { KidRequestSchemaOnSave, KidRequestSchemaOnUpdate } from "../requests";
-import { ValidationError } from "yup";
-import { Kid } from "@prisma/client";
 
 class KidController implements RootControllerInterface {
   /**
@@ -60,6 +60,7 @@ class KidController implements RootControllerInterface {
       await KidRequestSchemaOnSave.validate(body, { abortEarly: false });
 
       const user: Kid = await KidModel.save(body);
+      
 
       /**
        * GENERACION DE QR INICIAL

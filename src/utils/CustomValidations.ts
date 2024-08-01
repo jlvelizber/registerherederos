@@ -7,10 +7,10 @@ import {
   notFound,
   sameKidInSameDay,
 } from ".";
-import KidModel from "../models/Kid.model";
-import UserModel from "../models/User.model";
 import CampusServicesModel from "../models/CampusServices.model";
+import KidModel from "../models/Kid.model";
 import RegisterModel from "../models/Register.model";
+import UserModel from "../models/User.model";
 
 // Extend the yup namespace with the custom method
 declare module "yup" {
@@ -73,7 +73,7 @@ export function CustomValidations() {
 
           let exist = false;
 
-          // On update
+          // On update valiad para que no tome en cuenta su ID
           if (idKid) {
             exist = await KidModel.validateIfKidExistForIdentification(
               valueParam as string,

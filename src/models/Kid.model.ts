@@ -1,4 +1,4 @@
-import { KidPayload, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import RootModelInterface from "../interfaces/RootModelInterface.interface";
 
 const prisma = new PrismaClient();
@@ -63,9 +63,22 @@ class Kid implements RootModelInterface {
    */
   async save(body: any): Promise<any> {
     try {
-      const kid = await prisma.kid.create({
-        data: { ...body, date_born: new Date(body.date_born) },
-      });
+
+      const kidWasDeleted = await this.getKidDeletedByIdentification(body.identification);
+
+      if (!kidWasDeleted) {
+        const kid = await prisma.kid.create({
+          data: { ...body, date_born: new Date(body.date_born) },
+        });
+        return kid;
+      } 
+      
+      const newBody = {  ...kidWasDeleted, ...body, deleted_at: null }; // restaurar ni
+      const kid: Kid = await this.update(kidWasDeleted.id, newBody);
+      
+
+
+      
       return kid;
     } catch (error: any) {
       throw new Error(error);
@@ -97,7 +110,7 @@ class Kid implements RootModelInterface {
   }
 
   /**
-   * Busca un nino por identificacion
+   * Busca un nino por identificacion tomando en cuenta si no ha sido eliminado
    */
 
   async validateIfKidExistForIdentification(
@@ -107,6 +120,7 @@ class Kid implements RootModelInterface {
     const kid = await prisma.kid.findFirst({
       where: {
         identification: identification,
+        deleted_at: null,
         id: {
           not: idKid,
         },
@@ -179,6 +193,23 @@ class Kid implements RootModelInterface {
     });
 
     return kids;
+  }
+
+
+  /**
+   * Get a Kid deleted
+   * @param identification 
+   * @returns 
+   */
+  async getKidDeletedByIdentification(identification: string) {
+    return await prisma.kid.findFirst({
+      where: {
+        NOT: {
+          deleted_at: null
+        },
+        identification: identification
+      }
+    })
   }
 }
 
