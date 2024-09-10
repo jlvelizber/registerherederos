@@ -105,7 +105,7 @@ class Register implements RootModelInterface {
         ],
       },
     });
-    console.log(register);
+    // console.log(register);
     return register;
   }
 }

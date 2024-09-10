@@ -34,7 +34,7 @@ export function generarJWT(uid: string, name: string) {
       },
       (err, token) => {
         if (err) {
-          console.log(err);
+          // console.log(err);
           reject(`No se pudo generar el token`);
         }
 

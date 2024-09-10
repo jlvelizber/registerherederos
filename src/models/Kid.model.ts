@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import RootModelInterface from "../interfaces/RootModelInterface.interface";
 
 const prisma = new PrismaClient();
@@ -71,14 +71,14 @@ class Kid implements RootModelInterface {
           data: { ...body, date_born: new Date(body.date_born) },
         });
         return kid;
-      } 
-      
-      const newBody = {  ...kidWasDeleted, ...body, deleted_at: null }; // restaurar ni
+      }
+
+      const newBody = { ...kidWasDeleted, ...body, deleted_at: null }; // restaurar ni
       const kid: Kid = await this.update(kidWasDeleted.id, newBody);
-      
 
 
-      
+
+
       return kid;
     } catch (error: any) {
       throw new Error(error);
@@ -137,39 +137,21 @@ class Kid implements RootModelInterface {
    * @returns 
    */
   async queryKids(query: string) {
-    const kids = await prisma.kid.findMany({
-      where: {
-        OR: [
-          {
-            identification: {
-              contains: `${query}`,
-            },
-          },
-          {
-            name: {
-              contains: `${query}`,
-            },
-          },
-          {
-            lastname: {
-              contains: `${query}`,
-            },
-          },
-          {
-            parent_name: {
-              contains: `${query}`,
-            },
-          },
-        ],
-        AND: [
-          {
-            deleted_at: null
-          }
-        ]
-      },
 
-    });
-    return kids;
+    const queryLike = `%${query.split(" ").join("%")}%`;
+    const {deleted_at, ...rest} = this.visibleColumns;
+    const copyColumns = {...rest};
+    
+    const selectColumns = Object.keys(copyColumns).join(', ');
+    const result = await prisma.$queryRaw(Prisma.sql`SELECT 
+      ${Prisma.sql([selectColumns])} 
+    FROM Kid where 
+    concat (name,' ',lastname) like ${queryLike} 
+    or identification like ${queryLike}  
+    or parent_lastname like ${queryLike}
+    and deleted_at is null;`)
+
+    return result;
   }
 
   /**
