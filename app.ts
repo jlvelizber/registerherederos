@@ -1,4 +1,5 @@
 import express, { Application } from "express";
+import logger from "pino-http";
 import dontenv from "dotenv";
 import routes from "./src/routes";
 import cors from "cors";
@@ -43,6 +44,7 @@ export default class App {
 
   #configRequest() {
     this.app.use(express.json())
+    this.app.use(logger())
     this.app.use(express.static("public"))
   }
 
