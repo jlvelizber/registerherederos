@@ -1,6 +1,4 @@
 import express, { Application } from "express";
-import pino from "pino";
-import pinohttp from "pino-http";
 import dontenv from "dotenv";
 import routes from "./src/routes";
 import cors from "cors";
@@ -47,7 +45,7 @@ export default class App {
 
   #configRequest() {
     this.app.use(express.json())
-    this.app.use(pinohttp(pino.destination('./logs/server-log.log')))
+  //  this.app.use(pinohttp(pino.destination('./logs/server-log.log')))
     this.app.use(express.static("public"))
   }
 
