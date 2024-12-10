@@ -10,6 +10,7 @@ const kids = [
     parent_lastname: "Velizon",
     parent_email: "jorgeconsalvacion@gmail.com",
     parent_phone: "0996781030",
+    campus: 1, // Agregar el campo campus con un valor numérico
   },
   {
     identification: "0952214468",
@@ -19,6 +20,7 @@ const kids = [
     parent_lastname: "Pacheco",
     parent_email: "jorgeconsalvacion@gmail.com",
     parent_phone: "0996781030",
+    campus: 2, // Agregar el campo campus con un valor numérico
   },
 ];
 

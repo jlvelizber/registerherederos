@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import excelJs from "exceljs";
-import {RootControllerInterface} from "../interfaces";
+import { RootControllerInterface } from "../interfaces";
 import {
   RESPONSES_TYPES,
   formatDate,
@@ -204,17 +204,22 @@ class RegisterController implements RootControllerInterface {
     const workSheet = workBook.addWorksheet("Niños");
 
     workSheet.columns = [
-      { header: "Identificación del niño", key: "identification" },
-      { header: "Nombre", key: "name" },
-      { header: "Apellidos", key: "lastname" },
-      { header: "Edad", key: "date_born" },
-      { header: "Contacto", key: "parent_phone" },
+      { header: "Identificación", key: "identification", width: 25 },
+      { header: "Nombre", key: "name", width: 20 },
+      { header: "Apellidos", key: "lastname", width: 20 },
+      { header: "Edad", key: "date_born", width: 20 },
+      { header: "Contacto", key: "parent_phone", width: 25 },
+      { header: "Campus", key: "campus", width: 25 },
     ];
 
     registers.forEach((reg) => {
       workSheet.addRow({
-        ...reg.kid,
-        date_born: `${getYearOld(reg.kid.date_born)} año(s)`,
+        identification: reg.kid.identification,
+        name: reg.kid.name,
+        lastname: reg.kid.lastname,
+        date_born: reg.kid.date_born ? `${getYearOld(reg.kid.date_born)} año(s)` : "No registrada",
+        parent_phone: reg.kid.parent_phone,
+        campus: reg.kid.campus === 1 ? "Norte" : reg.kid.campus === 2 ? "Sur" : "",
       });
     });
 
